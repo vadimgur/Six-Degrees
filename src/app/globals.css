@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --cinema-dark: #0a0a0f;
+  --cinema-card: #13131f;
+  --cinema-border: #1e1e30;
+  --cinema-gold: #f5c842;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--cinema-dark);
+  color: #e2e8f0;
+  font-family: "Inter", system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cinema-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--cinema-border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2d2d4a;
+}
+
+/* Graph connector line animation */
+@keyframes pulse-line {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.connector-animate {
+  animation: pulse-line 2s ease-in-out infinite;
+}
+
+/* Shimmer loading effect */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #1e1e30 25%,
+    #2d2d4a 50%,
+    #1e1e30 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
