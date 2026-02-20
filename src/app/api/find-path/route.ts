@@ -1,7 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { findPath, PathStep } from "@/lib/pathfinder";
+import { getPersonExternalIds, getMovieExternalIds } from "@/lib/tmdb";
 
 export const maxDuration = 60;
+
+async function enrichWithImdbIds(path: PathStep[]): Promise<PathStep[]> {
+  const enriched = await Promise.all(
+    path.map(async (step) => {
+      try {
+        const imdbId =
+          step.type === "actor"
+            ? await getPersonExternalIds(step.id)
+            : await getMovieExternalIds(step.id);
+        return { ...step, imdbId };
+      } catch {
+        return { ...step, imdbId: null };
+      }
+    })
+  );
+  return enriched;
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,7 +58,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    return NextResponse.json({ path });
+    const enrichedPath = await enrichWithImdbIds(path);
+
+    return NextResponse.json({ path: enrichedPath });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error("find-path error:", err);

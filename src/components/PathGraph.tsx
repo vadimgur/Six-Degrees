@@ -8,6 +8,17 @@ interface PathGraphProps {
   path: PathStep[];
 }
 
+function getStepUrl(step: PathStep): string {
+  if (step.imdbId) {
+    return step.type === "actor"
+      ? `https://www.imdb.com/name/${step.imdbId}/`
+      : `https://www.imdb.com/title/${step.imdbId}/`;
+  }
+  return step.type === "actor"
+    ? `https://www.themoviedb.org/person/${step.id}`
+    : `https://www.themoviedb.org/movie/${step.id}`;
+}
+
 function ActorNode({
   step,
   highlight,
@@ -20,9 +31,14 @@ function ActorNode({
     : null;
 
   return (
-    <div className="flex flex-col items-center gap-2 min-w-[100px] max-w-[120px]">
+    <a
+      href={getStepUrl(step)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex flex-col items-center gap-2 min-w-[100px] max-w-[120px] group"
+    >
       <div
-        className={`relative w-20 h-20 rounded-full overflow-hidden border-4 shadow-lg flex-shrink-0 ${
+        className={`relative w-20 h-20 rounded-full overflow-hidden border-4 shadow-lg flex-shrink-0 transition-transform group-hover:scale-105 ${
           highlight
             ? "border-cinema-gold shadow-cinema-gold/30"
             : "border-cinema-border/60 shadow-black/40"
@@ -43,7 +59,7 @@ function ActorNode({
         )}
       </div>
       <p
-        className={`text-center text-xs font-semibold leading-tight max-w-[110px] ${
+        className={`text-center text-xs font-semibold leading-tight max-w-[110px] group-hover:underline underline-offset-2 ${
           highlight ? "text-cinema-gold" : "text-white"
         }`}
       >
@@ -52,7 +68,7 @@ function ActorNode({
       <span className="text-[10px] text-cinema-muted uppercase tracking-wider">
         Actor
       </span>
-    </div>
+    </a>
   );
 }
 
@@ -62,8 +78,13 @@ function MovieNode({ step }: { step: PathStep }) {
     : null;
 
   return (
-    <div className="flex flex-col items-center gap-2 min-w-[90px] max-w-[110px]">
-      <div className="relative w-[72px] h-[108px] rounded-lg overflow-hidden border-2 border-cinema-border shadow-lg shadow-black/50 flex-shrink-0">
+    <a
+      href={getStepUrl(step)}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex flex-col items-center gap-2 min-w-[90px] max-w-[110px] group"
+    >
+      <div className="relative w-[72px] h-[108px] rounded-lg overflow-hidden border-2 border-cinema-border shadow-lg shadow-black/50 flex-shrink-0 transition-transform group-hover:scale-105">
         {imgSrc ? (
           <Image
             src={imgSrc}
@@ -78,13 +99,13 @@ function MovieNode({ step }: { step: PathStep }) {
           </div>
         )}
       </div>
-      <p className="text-center text-xs text-slate-300 leading-tight max-w-[100px] font-medium">
+      <p className="text-center text-xs text-slate-300 leading-tight max-w-[100px] font-medium group-hover:underline underline-offset-2">
         {step.name}
       </p>
       <span className="text-[10px] text-cinema-muted uppercase tracking-wider">
         Movie
       </span>
-    </div>
+    </a>
   );
 }
 
@@ -177,17 +198,20 @@ export default function PathGraph({ path }: PathGraphProps) {
         <p className="text-sm text-slate-300 leading-relaxed">
           {path.map((step, index) => (
             <span key={`text-${step.type}-${step.id}-${index}`}>
-              <span
-                className={
+              <a
+                href={getStepUrl(step)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`hover:underline underline-offset-2 ${
                   step.type === "actor"
                     ? index === 0 || index === path.length - 1
                       ? "text-cinema-gold font-semibold"
                       : "text-white font-medium"
                     : "text-slate-400 italic"
-                }
+                }`}
               >
                 {step.name}
-              </span>
+              </a>
               {index < path.length - 1 && (
                 <span className="text-cinema-border mx-2">→</span>
               )}

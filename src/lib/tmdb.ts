@@ -70,3 +70,17 @@ export async function getMovieCredits(
   const data = await tmdbFetch(`/movie/${movieId}/credits?language=en-US`);
   return data.cast ?? [];
 }
+
+export async function getPersonExternalIds(
+  personId: number
+): Promise<string | null> {
+  const data = await tmdbFetch(`/person/${personId}/external_ids`);
+  return data.imdb_id ?? null;
+}
+
+export async function getMovieExternalIds(
+  movieId: number
+): Promise<string | null> {
+  const data = await tmdbFetch(`/movie/${movieId}?language=en-US`);
+  return data.imdb_id ?? null;
+}

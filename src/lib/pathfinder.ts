@@ -1,8 +1,8 @@
 import { getPersonMovies, getMovieCredits } from "./tmdb";
 
 export type PathStep =
-  | { type: "actor"; id: number; name: string; imagePath: string | null }
-  | { type: "movie"; id: number; name: string; imagePath: string | null };
+  | { type: "actor"; id: number; name: string; imagePath: string | null; imdbId?: string | null }
+  | { type: "movie"; id: number; name: string; imagePath: string | null; imdbId?: string | null };
 
 // How many top movies to consider per actor (by popularity)
 const MAX_MOVIES_PER_ACTOR = 6;
